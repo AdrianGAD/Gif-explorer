@@ -8,29 +8,50 @@ import (
 	"github.com/adrian/gif-backend/handlers"
 	"github.com/gorilla/mux"
 	"github.com/joho/godotenv"
+	"github.com/sirupsen/logrus"
 )
 
 func main() {
-	_ = godotenv.Load()
+	// load .env first
+	if err := godotenv.Load(); err != nil {
+		logrus.Warn("No .env file found, relying on environment")
+	}
+
+	// ensure API key is present
+	if os.Getenv("GIPHY_API_KEY") == "" {
+		logrus.Fatal("GIPHY_API_KEY is not set")
+	}
+
+	// use Logrus for global logging format
+	logrus.SetFormatter(&logrus.JSONFormatter{})
 
 	r := mux.NewRouter()
+
+	// metrics endpoint
+	r.Handle("/metrics", handlers.ExposeMetricsHandler())
 
 	// CORS Middleware
 	r.Use(mux.CORSMethodMiddleware(r))
 	r.Use(corsMiddleware)
 
+	// our logging+metrics middleware
+	r.Use(handlers.LoggingAndMetricsMiddleware)
+
+	// health and readiness
+	r.HandleFunc("/health", handlers.HealthCheck).Methods("GET")
+	r.HandleFunc("/ready", handlers.HealthCheck).Methods("GET") // same logic
+
+	// API subrouter
 	api := r.PathPrefix("/api").Subrouter()
 	api.HandleFunc("/trending", handlers.GetTrending).Methods("GET")
 	api.HandleFunc("/search", handlers.SearchGIFs).Methods("GET")
-	r.HandleFunc("/api/search", handlers.SearchGIFs).Methods("GET")
-	r.HandleFunc("/health", handlers.HealthCheck).Methods("GET")
 
+	// start server
 	port := os.Getenv("PORT")
 	if port == "" {
 		port = "5050"
 	}
-
-	log.Printf("🚀 Backend running on http://localhost:%s\n", port)
+	logrus.Infof("🚀 Backend running on http://localhost:%s", port)
 	log.Fatal(http.ListenAndServe(":"+port, r))
 }
 
