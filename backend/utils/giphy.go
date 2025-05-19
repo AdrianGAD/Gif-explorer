@@ -7,7 +7,7 @@ import (
 	"os"
 )
 
-const baseURL = "https://api.giphy.com/v1/gifs"
+var baseURL = "https://api.giphy.com/v1/gifs"
 
 func FetchTrending(limit, page int) (map[string]interface{}, error) {
 	offset := (page - 1) * limit
