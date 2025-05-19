@@ -9,8 +9,6 @@ import (
     "github.com/adrian/gif-backend/utils"
 )
 
-// ... (keep your corsMiddleware, imports, etc.)
-
 func GetTrending(w http.ResponseWriter, r *http.Request) {
     // parse limit & page as before...
     limit := r.URL.Query().Get("limit")
