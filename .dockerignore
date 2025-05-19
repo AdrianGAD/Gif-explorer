@@ -1,0 +1,10 @@
+# Ignore dependencies
+node_modules
+# Ignore local build outputs
+build
+# Ignore Git internals
+.git
+# Avoid sending Dockerfiles and Compose configs twice
+Dockerfile*
+docker-compose.yml
+.env
