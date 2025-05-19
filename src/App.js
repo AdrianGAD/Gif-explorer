@@ -3,6 +3,9 @@ import { searchGIFs } from "./api/api";
 import "./styles/App.css";
 
 function App() {
+  // React.useEffect(() => {
+  //   throw new Error("Simulated crash in App");
+  // }, [])
   const [gifs, setGifs] = useState([]);
   const [query, setQuery] = useState("");
   const [favorites, setFavorites] = useState([]);

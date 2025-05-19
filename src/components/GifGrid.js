@@ -1,6 +1,11 @@
 import React from "react";
 
 function GifGrid({ gifs, favorites, toggleFavorite, copyLink }) {
+  // 👇 FORCE an error to test ErrorBoundary
+  if (process.env.NODE_ENV !== 'production') {
+  throw new Error('💥 Test crash in GifGrid');
+ }
+
   return (
     <div className="gif-grid">
       {gifs.map((gif) => (
