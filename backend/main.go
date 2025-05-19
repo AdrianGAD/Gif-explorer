@@ -22,7 +22,7 @@ func main() {
 		logrus.Fatal("GIPHY_API_KEY is not set")
 	}
 
-	// use Logrus for global logging format
+	// use Logrus for structured JSON logs
 	logrus.SetFormatter(&logrus.JSONFormatter{})
 
 	r := mux.NewRouter()
@@ -30,18 +30,21 @@ func main() {
 	// metrics endpoint
 	r.Handle("/metrics", handlers.ExposeMetricsHandler())
 
+	// Panic-recovery middleware (must come before all others)
+	r.Use(handlers.RecoveryMiddleware)
+
 	// CORS Middleware
 	r.Use(mux.CORSMethodMiddleware(r))
 	r.Use(corsMiddleware)
 
-	// our logging+metrics middleware
+	// Logging & metrics middleware
 	r.Use(handlers.LoggingAndMetricsMiddleware)
 
-	// health and readiness
+	// health and readiness probes
 	r.HandleFunc("/health", handlers.HealthCheck).Methods("GET")
-	r.HandleFunc("/ready", handlers.HealthCheck).Methods("GET") // same logic
+	r.HandleFunc("/ready", handlers.HealthCheck).Methods("GET")
 
-	// API subrouter
+	// API routes
 	api := r.PathPrefix("/api").Subrouter()
 	api.HandleFunc("/trending", handlers.GetTrending).Methods("GET")
 	api.HandleFunc("/search", handlers.SearchGIFs).Methods("GET")

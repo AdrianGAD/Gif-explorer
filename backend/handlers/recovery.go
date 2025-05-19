@@ -8,7 +8,7 @@ import (
 )
 
 // recoveryMiddleware catches panics in handlers, logs them, and returns a 500 JSON error.
-func recoveryMiddleware(next http.Handler) http.Handler {
+func RecoveryMiddleware(next http.Handler) http.Handler {
     return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
         defer func() {
             if rec := recover(); rec != nil {
