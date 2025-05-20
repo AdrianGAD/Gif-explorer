@@ -161,10 +161,13 @@ go run main.go       # start backend server
 docker-compose up --build   # build & start services  
 docker-compose down         # stop & remove containers  
 
-**🔑 Environment Variables**
-Variable	              Description	                  Default
-GIPHY_API_KEY	     Giphy API key (required)	             —
-PORT	              Backend listen port	                5050
+## 🔑 Environment Variables
+
+| Variable        | Description                 | Default |
+| --------------- | --------------------------- | ------- |
+| `GIPHY_API_KEY` | Giphy API key _(required)_  | —       |
+| `PORT`          | Backend listen port         | `5050`  |
+
 
 **📝 Implementation Notes**
 ## Separation of Concerns
