@@ -121,7 +121,7 @@ cd gif-explorer
 cp backend/.env.example backend/.env
 
 # Add your GIPHY_API_KEY inside backend/.env:
-# GIPHY_API_KEY=YOUR_GIPHY_API_KEY
+GIPHY_API_KEY=YOUR_GIPHY_API_KEY
 
 ### 2a. Using Docker Compose
 
@@ -172,19 +172,19 @@ docker-compose down         # stop & remove containers
 **📝 Implementation Notes**
 ## Separation of Concerns
 
-handlers/ parse HTTP & encode JSON
+`handlers/` parse HTTP & encode JSON
 
-utils/ encapsulate Giphy API logic & types
+`utils/` encapsulate Giphy API logic & types
 
 ## Error Handling
 
 Go middleware recovers panics → JSON 500
 
-React ErrorBoundary shows fallback UI
+React `ErrorBoundary` shows fallback UI
 
 ## Performance
 
-Frontend uses useCallback, pagination
+Frontend uses `useCallback`, pagination
 
 Backend uses streaming JSON decode
 
