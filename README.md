@@ -15,7 +15,7 @@
                   `-_ `-.___        __,--'   ,'
                      `-.__  `----"""    __.-'
                          `--..____..--'
-                            <a href="https://ninox.com">Ninox</a>
+                                                                    <a href="https://ninox.com">Ninox</a>
 </pre>
 
 A responsive React application for browsing and searching GIFs, backed by a custom Go service that fetches data from the [Giphy API](https://developers.giphy.com/docs/). Both frontend and backend are containerized with Docker for easy local development and production deployment.
