@@ -88,7 +88,6 @@ gif-explorer/
 │   ├── components/
 │   │   ├── ErrorBoundary.jsx
 │   │   ├── FavoritesSection.js
-│   │   ├── GifGrid.js
 │   │   └── SearchBar.js
 │   ├── styles/             # CSS files
 │   ├── App.js              # main React component
