@@ -148,18 +148,18 @@ npm start
 ## 📋 Available Scripts
 
 ### Frontend (`src/`)
-npm start       # run dev server  
-npm run build   # build production bundle  
+npm start       ---> run dev server  
+npm run build   ---> build production bundle  
 
 
 ### Backend (backend/)
-go test ./handlers   # run handler tests  
-go test ./utils      # run Giphy client tests  
-go run main.go       # start backend server 
+go test ./handlers   ---> run handler tests  
+go test ./utils      ---> run Giphy client tests  
+go run main.go       ---> start backend server 
 
 ### Docker
-docker-compose up --build   # build & start services  
-docker-compose down         # stop & remove containers  
+docker-compose up --build   ---> build & start services  
+docker-compose down         ---> stop & remove containers  
 
 ## 🔑 Environment Variables
 
