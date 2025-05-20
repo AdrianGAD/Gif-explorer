@@ -74,33 +74,33 @@ Create a responsive React application that displays images from a custom backend
 
 ## 🗂️ Repository Structure
 
-## Repository Structure
-
-```plaintext
+```
 gif-explorer/
 ├── backend/
 │   ├── handlers/           # Go HTTP handlers & middleware
 │   ├── utils/              # Giphy client & types
 │   ├── main.go             # Server setup & routing
-│   ├── Dockerfile          # Multi-stage build
-│   └── .env.example        # env template
+│   ├── Dockerfile          # Multi-stage build for production
+│   └── .env.example        # env template for GIPHY_API_KEY
 ├── src/
 │   ├── api/
-│   │   └── api.js          # front-end API helper
+│   │   └── api.js          # frontend API helper
 │   ├── components/
 │   │   ├── ErrorBoundary.jsx
 │   │   ├── FavoritesSection.js
+│   │   ├── GifGrid.js
 │   │   └── SearchBar.js
 │   ├── styles/             # CSS files
 │   ├── App.js              # main React component
-│   ├── index.js            # React entry point
-│   └── setupProxy.js       # dev‐time proxy to /api
-├── docker-compose.yml      # local dev orchestration
+│   ├── index.js            # React entry point (with ErrorBoundary)
+│   └── setupProxy.js       # dev-time proxy to /api
+├── docker-compose.yml      # local dev setup for both services
 ├── Dockerfile.frontend     # prod build for React + Nginx
-├── package.json            # npm scripts & dependencies
+├── package.json            # npm scripts & deps
 └── README.md               # this file
+```
 
----
+
 
 ## ⚙️ Prerequisites
 
