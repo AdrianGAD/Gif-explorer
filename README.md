@@ -74,29 +74,31 @@ Create a responsive React application that displays images from a custom backend
 
 ## 🗂️ Repository Structure
 
+## Repository Structure
+
+```plaintext
 gif-explorer/
 ├── backend/
-│ ├── handlers/ # Go HTTP handlers & middleware
-│ ├── utils/ # Giphy client & types
-│ ├── main.go # Server setup & routing
-│ ├── Dockerfile # Multi-stage build for production
-│ └── .env.example # env template for GIPHY_API_KEY
+│   ├── handlers/           # Go HTTP handlers & middleware
+│   ├── utils/              # Giphy client & types
+│   ├── main.go             # Server setup & routing
+│   ├── Dockerfile          # Multi-stage build
+│   └── .env.example        # env template
 ├── src/
-│ ├── api/ # frontend API helper
-│ │ └── api.js
-│ ├── components/ # React components
-│ │ ├── ErrorBoundary.jsx
-│ │ ├── FavoritesSection.js
-│ │ └── SearchBar.js
-│ ├── styles/ # CSS files
-│ ├── App.js # main React component
-│ ├── index.js # React entry point (with ErrorBoundary)
-│ └── setupProxy.js # dev-time proxy to /api
-├── docker-compose.yml # local dev setup for both services
-├── Dockerfile.frontend # prod build for React + Nginx
-├── package.json # npm scripts & deps
-└── README.md # this file
-
+│   ├── api/
+│   │   └── api.js          # front-end API helper
+│   ├── components/
+│   │   ├── ErrorBoundary.jsx
+│   │   ├── FavoritesSection.js
+│   │   └── SearchBar.js
+│   ├── styles/             # CSS files
+│   ├── App.js              # main React component
+│   ├── index.js            # React entry point
+│   └── setupProxy.js       # dev‐time proxy to /api
+├── docker-compose.yml      # local dev orchestration
+├── Dockerfile.frontend     # prod build for React + Nginx
+├── package.json            # npm scripts & dependencies
+└── README.md               # this file
 
 ---
 
@@ -168,29 +170,29 @@ PORT	              Backend listen port	                5050
 **📝 Implementation Notes**
 ## Separation of Concerns
 
-# handlers/ parse HTTP & encode JSON
+handlers/ parse HTTP & encode JSON
 
-# utils/ encapsulate Giphy API logic & types
+utils/ encapsulate Giphy API logic & types
 
 ## Error Handling
 
-# Go middleware recovers panics → JSON 500
+Go middleware recovers panics → JSON 500
 
-# React ErrorBoundary shows fallback UI
+React ErrorBoundary shows fallback UI
 
 ## Performance
 
-# Frontend uses useCallback, pagination
+Frontend uses useCallback, pagination
 
-# Backend uses streaming JSON decode
+Backend uses streaming JSON decode
 
 ## Operational Readiness
 
-# Health (/health) & readiness (/ready) probes
+Health (/health) & readiness (/ready) probes
 
-# Prometheus metrics (/metrics)
+Prometheus metrics (/metrics)
 
-# JSON-structured logs via Logrus
+JSON-structured logs via Logrus
 
 
 Thank you for reviewing! 🚀
