@@ -1,71 +1,86 @@
 package main
 
 import (
-	"log"
-	"net/http"
-	"os"
+    "log"                           // standard logging (used briefly for fallback)
+    "net/http"                      // HTTP server and handler types
+    "os"                            // for reading environment variables
 
-	"github.com/adrian/gif-backend/handlers"
-	"github.com/gorilla/mux"
-	"github.com/joho/godotenv"
-	"github.com/sirupsen/logrus"
+    "github.com/adrian/gif-backend/handlers" // our HTTP handlers and middleware
+    "github.com/gorilla/mux"                // request router
+    "github.com/joho/godotenv"              // loads .env files into environment
+    "github.com/sirupsen/logrus"            // structured, leveled logging
 )
 
 func main() {
-	// load .env first
-	if err := godotenv.Load(); err != nil {
-		logrus.Warn("No .env file found, relying on environment")
-	}
+    // 1) Load environment variables from a .env file, if present.
+    //    If .env is missing, log a warning but continue (we expect vars to be set elsewhere).
+    if err := godotenv.Load(); err != nil {
+        logrus.Warn("No .env file found, relying on environment")
+    }
 
-	// ensure API key is present
-	if os.Getenv("GIPHY_API_KEY") == "" {
-		logrus.Fatal("GIPHY_API_KEY is not set")
-	}
+    // 2) Ensure the GIPHY_API_KEY is set; this is critical for our service to work.
+    //    If missing, we fatally exit (no sense running without an API key).
+    if os.Getenv("GIPHY_API_KEY") == "" {
+        logrus.Fatal("GIPHY_API_KEY is not set")
+    }
 
-	// use Logrus for structured JSON logs
-	logrus.SetFormatter(&logrus.JSONFormatter{})
+    // 3) Configure Logrus to emit JSON-formatted logs for better parsing in production.
+    logrus.SetFormatter(&logrus.JSONFormatter{})
 
-	r := mux.NewRouter()
+    // 4) Create a new Gorilla Mux router to register routes and middleware.
+    r := mux.NewRouter()
 
-	// metrics endpoint
-	r.Handle("/metrics", handlers.ExposeMetricsHandler())
+    // 5) Expose Prometheus metrics on the /metrics endpoint.
+    //    handlers.ExposeMetricsHandler returns the promhttp.Handler.
+    r.Handle("/metrics", handlers.ExposeMetricsHandler())
 
-	// Panic-recovery middleware (must come before all others)
-	r.Use(handlers.RecoveryMiddleware)
+    // 6) Register our panic-recovery middleware first.
+    //    It will catch any panics in downstream handlers, log them, and return a 500 response.
+    r.Use(handlers.RecoveryMiddleware)
 
-	// CORS Middleware
-	r.Use(mux.CORSMethodMiddleware(r))
-	r.Use(corsMiddleware)
+    // 7) CORS middleware: allow ONLY our React frontend origin to make requests.
+    //    We use both the built-in Mux CORSMethodMiddleware and our custom handler.
+    r.Use(mux.CORSMethodMiddleware(r))
+    r.Use(corsMiddleware)
 
-	// Logging & metrics middleware
-	r.Use(handlers.LoggingAndMetricsMiddleware)
+    // 8) Logging & metrics middleware: logs each request and updates Prometheus counters.
+    r.Use(handlers.LoggingAndMetricsMiddleware)
 
-	// health and readiness probes
-	r.HandleFunc("/health", handlers.HealthCheck).Methods("GET")
-	r.HandleFunc("/ready", handlers.HealthCheck).Methods("GET")
+    // 9) Health and readiness probes: simple JSON endpoints for uptime checks.
+    r.HandleFunc("/health", handlers.HealthCheck).Methods("GET")
+    r.HandleFunc("/ready", handlers.HealthCheck).Methods("GET")
 
-	// API routes
-	api := r.PathPrefix("/api").Subrouter()
-	api.HandleFunc("/trending", handlers.GetTrending).Methods("GET")
-	api.HandleFunc("/search", handlers.SearchGIFs).Methods("GET")
+    // 10) API routes are grouped under /api prefix.
+    api := r.PathPrefix("/api").Subrouter()
+    api.HandleFunc("/trending", handlers.GetTrending).Methods("GET")
+    api.HandleFunc("/search", handlers.SearchGIFs).Methods("GET")
 
-	// start server
-	port := os.Getenv("PORT")
-	if port == "" {
-		port = "5050"
-	}
-	logrus.Infof("🚀 Backend running on http://localhost:%s", port)
-	log.Fatal(http.ListenAndServe(":"+port, r))
+    // 11) Determine the port to listen on. Default to 5050 if PORT env var is missing.
+    port := os.Getenv("PORT")
+    if port == "" {
+        port = "5050"
+    }
+
+    // 12) Log an info message indicating where the server is available.
+    logrus.Infof("🚀 Backend running on http://localhost:%s", port)
+
+    // 13) Start the HTTP server. If it fails, log.Fatal will exit the process.
+    log.Fatal(http.ListenAndServe(":"+port, r))
 }
 
+// corsMiddleware sets CORS headers to allow cross-origin requests from our React app.
+// It permits only GET and OPTIONS methods and the Content-Type header.
+// For OPTIONS preflight requests, it returns immediately without calling the next handler.
 func corsMiddleware(next http.Handler) http.Handler {
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		w.Header().Set("Access-Control-Allow-Origin", "http://localhost:3000")
-		w.Header().Set("Access-Control-Allow-Methods", "GET, OPTIONS")
-		w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
-		if r.Method == "OPTIONS" {
-			return
-		}
-		next.ServeHTTP(w, r)
-	})
+    return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+        w.Header().Set("Access-Control-Allow-Origin", "http://localhost:3000")
+        w.Header().Set("Access-Control-Allow-Methods", "GET, OPTIONS")
+        w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
+        if r.Method == "OPTIONS" {
+            // Preflight request: respond with headers only
+            return
+        }
+        // For actual requests, proceed to the next handler
+        next.ServeHTTP(w, r)
+    })
 }

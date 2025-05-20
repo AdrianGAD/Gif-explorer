@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './styles/index.css';
 import App from './App';
-import ErrorBoundary from './components/ErrorBoundary';  // ← fixed path
+import ErrorBoundary from './components/ErrorBoundary';
 import reportWebVitals from './assets/reportWebVitals';
 
 const container = document.getElementById('root');

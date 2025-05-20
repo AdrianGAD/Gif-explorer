@@ -63,10 +63,3 @@ func TestSearchGIFs_MissingQuery(t *testing.T) {
         t.Errorf("expected error about missing q; got %q", body)
     }
 }
-
-// You can add more tests below. For example:
-// - TestSearchGIFs_Success: stub out http.Get via a custom http.Client in tests
-//   and verify that valid ?q=cat returns forwarded JSON from your stub.
-// - TestGetTrending: similarly stub utils.FetchTrending or http.Get to return
-//   canned data, then confirm GetTrending writes that data unmodified.
-// - Table-driven tests for different limit/page values, invalid numbers, etc.

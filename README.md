@@ -1,70 +1,197 @@
-# Getting Started with Create React App
+# GIF Explorer
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+A responsive React application for browsing and searching GIFs, backed by a custom Go service that fetches data from the [Giphy API](https://developers.giphy.com/docs/). Both frontend and backend are containerized with Docker for easy local development and production deployment.
 
-## Available Scripts
 
-In the project directory, you can run:
+---
 
-### `npm start`
+## 🚀 Objective
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+Create a responsive React application that displays images from a custom backend service, which in turn fetches data from the Giphy API. The frontend should feature a grid view with square cards that dynamically adjust to screen size, while the backend should handle API requests and serve processed data to the frontend.
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+---
 
-### `npm test`
+## 📌 Core Requirements
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+### User Interface
 
-### `npm run build`
+- **GIF Grid Layout**  
+  - Fetch GIF data _from backend_ (not directly from Giphy)  
+  - Display GIFs in a responsive CSS Grid with square cards and minimum width  
+  - Each card must contain:
+    - GIF image  
+    - Title below the image  
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+- **Loading State**  
+  - Show a spinner animation while fetching  
+  - Visible until data arrives  
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+- **Styling & Layout**  
+  - Mobile-friendly, responsive design  
+  - Minimal, clean styling  
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+### API Requirements
 
-### `npm run eject`
+- **Trending**  
+  - Endpoint: `GET /api/trending`  
+  - Supports pagination (`limit`, `page`)  
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+- **Search**  
+  - Endpoint: `GET /api/search?q=…`  
+  - Supports filters (`rating`, `lang`) and pagination  
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+### Deployment Requirements
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+- **Containerized Services**  
+  - Frontend and backend as separate Docker containers  
+  - Development and production configurations  
+  - Optimized multi-stage builds  
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+- **Service Architecture**  
+  - Frontend accessible to users  
+  - Frontend proxies API calls to the backend  
 
-## Learn More
+---
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+## 📦 Deliverables
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+- **GitHub Repo** containing:
+  - Application source code  
+  - Docker setup for local dev & production  
+  - `README.md` (this file)  
 
-### Code Splitting
+---
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+## 🎯 Evaluation Criteria
 
-### Analyzing the Bundle Size
+✔ Architecture – clear separation of concerns  
+✔ Performance – efficient rendering, caching  
+✔ Operational – error handling, logging, metrics, health checks  
+✔ Docker Mastery – production-ready setup  
+✔ Code Quality – types, tests, error handling  
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+---
 
-### Making a Progressive Web App
+## 🗂️ Repository Structure
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+gif-explorer/
+├── backend/
+│ ├── handlers/ # Go HTTP handlers & middleware
+│ ├── utils/ # Giphy client & types
+│ ├── main.go # Server setup & routing
+│ ├── Dockerfile # Multi-stage build for production
+│ └── .env.example # env template for GIPHY_API_KEY
+├── src/
+│ ├── api/ # frontend API helper
+│ │ └── api.js
+│ ├── components/ # React components
+│ │ ├── ErrorBoundary.jsx
+│ │ ├── FavoritesSection.js
+│ │ └── SearchBar.js
+│ ├── styles/ # CSS files
+│ ├── App.js # main React component
+│ ├── index.js # React entry point (with ErrorBoundary)
+│ └── setupProxy.js # dev-time proxy to /api
+├── docker-compose.yml # local dev setup for both services
+├── Dockerfile.frontend # prod build for React + Nginx
+├── package.json # npm scripts & deps
+└── README.md # this file
 
-### Advanced Configuration
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+---
 
-### Deployment
+## ⚙️ Prerequisites
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+- [Docker & Docker Compose](https://docs.docker.com/get-docker/)  
+- [Go 1.24+](https://golang.org/dl/) (for backend)  
+- [Node.js >= 18 & npm](https://nodejs.org/) (for frontend)  
 
-### `npm run build` fails to minify
+---
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+## 🛠️ Local Development
+
+### 1. Clone & Configure
+
+git clone https://github.com/yourusername/gif-explorer.git
+cd gif-explorer
+
+# Copy and edit environment variables
+
+cp backend/.env.example backend/.env
+
+# Add your GIPHY_API_KEY inside backend/.env:
+# GIPHY_API_KEY=YOUR_GIPHY_API_KEY
+
+### 2a. Using Docker Compose
+
+docker-compose up --build
+
+Frontend → http://localhost:3000
+
+Backend → http://localhost:5050
+
+### 2b. Without Docker
+# Backend
+
+cd backend
+go mod download
+go run main.go
+
+# Frontend
+
+cd src
+npm install
+npm start
+# (CRA’s setupProxy.js forwards /api to port 5050)
+
+## 📋 Available Scripts
+
+### Frontend (`src/`)
+npm start       # run dev server  
+npm run build   # build production bundle  
+
+
+### Backend (backend/)
+go test ./handlers   # run handler tests  
+go test ./utils      # run Giphy client tests  
+go run main.go       # start backend server 
+
+### Docker
+docker-compose up --build   # build & start services  
+docker-compose down         # stop & remove containers  
+
+**🔑 Environment Variables**
+Variable	              Description	                  Default
+GIPHY_API_KEY	     Giphy API key (required)	             —
+PORT	              Backend listen port	                5050
+
+**📝 Implementation Notes**
+## Separation of Concerns
+
+# handlers/ parse HTTP & encode JSON
+
+# utils/ encapsulate Giphy API logic & types
+
+## Error Handling
+
+# Go middleware recovers panics → JSON 500
+
+# React ErrorBoundary shows fallback UI
+
+## Performance
+
+# Frontend uses useCallback, pagination
+
+# Backend uses streaming JSON decode
+
+## Operational Readiness
+
+# Health (/health) & readiness (/ready) probes
+
+# Prometheus metrics (/metrics)
+
+# JSON-structured logs via Logrus
+
+
+Thank you for reviewing! 🚀
+Happy GIF exploring!
