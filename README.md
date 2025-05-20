@@ -1,5 +1,14 @@
 # GIF Explorer
 
+```
+_
+//
+V
+\ _
+,'.-. |\ . . ( \ . -. _,.-:\ \ \ . -._ __..--' ,-';/ \ . -. -....---' .--' ,'/
+. . -._ __..--' ,' / . -_ ``--..'' _.-' ,' - -.___ __,--' ,' -. ----""" __.-' --..___..--'
+```
+
 A responsive React application for browsing and searching GIFs, backed by a custom Go service that fetches data from the [Giphy API](https://developers.giphy.com/docs/). Both frontend and backend are containerized with Docker for easy local development and production deployment.
 
 
